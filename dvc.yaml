@@ -1,0 +1,44 @@
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+    - src/log_file.py
+    - src/data_ingestion.py
+    outs:
+    - Data/raw
+
+  data_preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - src/log_file.py
+    - Data/raw
+    - src/data_preprocessing.py
+    outs:
+    - Data/interim_clean
+
+  feature_engineering:
+    cmd: python src/feature_Eng.py
+    deps:
+    - src/log_file.py
+    - Data/interim_clean
+    - src/feature_Eng.py
+    outs:
+    - Data/processed
+
+  model_building:
+    cmd: python src/model_building.py
+    deps:
+    - src/log_file.py
+    - Data/processed
+    - src/model_building.py
+    outs:
+    - models/model.pkl
+
+  model_evalution:
+    cmd: python src/model_evalution.py
+    deps:
+    - src/log_file.py
+    - models/model.pkl
+    - src/model_evalution.py
+    outs:
+    - reports\metrics.json
