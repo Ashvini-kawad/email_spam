@@ -2,9 +2,27 @@ import pandas as pd
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
+import yaml
 
 from log_file import log_function
 logger=log_function('data_ingestion')
+
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s', params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found: %s', params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error: %s', e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error: %s', e)
+        raise
 
 def data_load(data_url:str) -> pd.DataFrame:
     try:
@@ -47,7 +65,9 @@ def save_data(train_data:pd.DataFrame,test_data:pd.DataFrame,data_path:str)->Non
 def main():
     try:
         data_url='Data\spam.csv'
-        test_size=0.2
+        params = load_params(params_path='params.yaml')
+        test_size = params['data_ingestion']['test_size']
+        # test_size=0.2
         df=data_load(data_url)
         process_df=data_clean(df)
         train_data, test_data = train_test_split(process_df, test_size=test_size, random_state=2)
