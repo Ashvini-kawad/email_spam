@@ -78,8 +78,8 @@ def main(text_column='text', target_column='target'):
     """
     try:
         # Fetch the data from data/raw
-        train_data = pd.read_csv('./data/raw/train.csv')
-        test_data = pd.read_csv('./data/raw/test.csv')
+        train_data = pd.read_csv('./Data/raw/train.csv')
+        test_data = pd.read_csv('./Data/raw/test.csv')
         logger.debug('Data loaded properly')
 
         # Transform the data
@@ -87,7 +87,7 @@ def main(text_column='text', target_column='target'):
         test_processed_data = preprocess_data(test_data, text_column, target_column)
 
         # Store the data inside data/processed
-        data_path = os.path.join("./data", "interim_clean")
+        data_path = os.path.join("./Data", "interim_clean")
         os.makedirs(data_path, exist_ok=True)
         
         train_processed_data.to_csv(os.path.join(data_path, "train_processed.csv"), index=False)
